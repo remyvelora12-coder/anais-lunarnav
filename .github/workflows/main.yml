@@ -1,0 +1,49 @@
+name: ANAIS LunarNav - Initial CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-check:
+    name: Repository Structure Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Display repository information
+        run: |
+          echo "ANAIS LunarNav CI"
+          echo "Commit: $GITHUB_SHA"
+          echo "Branch: $GITHUB_REF_NAME"
+
+      - name: Inspect repository structure
+        run: |
+          echo "Repository files:"
+          find . -maxdepth 3 -type f | sort | head -100
+
+      - name: Check backend directory
+        run: |
+          if [ -d backend ]; then
+            echo "Backend directory exists"
+          else
+            echo "Backend directory not yet created"
+          fi
+
+      - name: Check frontend directory
+        run: |
+          if [ -d frontend ]; then
+            echo "Frontend directory exists"
+          else
+            echo "Frontend directory not yet created"
+          fi
+
+      - name: Confirm workflow execution
+        run: |
+          echo "Initial repository inspection completed"
