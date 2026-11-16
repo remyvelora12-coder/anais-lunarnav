@@ -69,6 +69,6 @@ LUNARNAV_DE432S=/path/to/de432s.bsp LUNARNAV_PCK00011=/path/to/pck00011.tpc \
   python -m pytest tests/test_ephemeris.py
 ```
 file:///Users/edwardguillenmorjon/Downloads/anais-lunarlink-site/index.htmlThe tests pin the kernel hashes and allow 0.2 km for the Sun and 0.01 km for
-Earth because the DE432s and DE441 ephemerides differ. These comparisons do
+DEPLOY-NOW.txtEarth because the DE432s and DE441 ephemerides differ. These comparisons do
 not independently validate lunar orientation, other dates, terrain,
 visibility against real observations, or mission comparisons.
