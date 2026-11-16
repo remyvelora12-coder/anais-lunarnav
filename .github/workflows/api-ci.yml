@@ -1,0 +1,26 @@
+name: LunarNav API Contract CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  api-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install scientific, API and test dependencies
+        run: python -m pip install -e '.[api,test]'
+      - name: Run scientific and API tests
+        run: python -m pytest --junitxml=api-test-results.xml
+      - name: Upload JUnit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lunarnav-021-pytest
+          path: api-test-results.xml
+          if-no-files-found: warn

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "anais-lunarnav"
-version = "0.1.0"
-description = "Scientific primitives for ANAIS LunarNav"
+version = "0.2.0"
+description = "Scientific primitives and validated HTTP interface for ANAIS LunarNav"
 requires-python = ">=3.9"
 dependencies = [
     "numpy==2.0.2",
@@ -13,8 +13,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+api = [
+    "fastapi==0.115.12",
+    "uvicorn==0.34.2",
+    "httpx==0.28.1",
+]
 test = [
     "pytest==8.3.5",
+    "fastapi==0.115.12",
+    "httpx==0.28.1",
 ]
 
 [tool.setuptools.packages.find]
