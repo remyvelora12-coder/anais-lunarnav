@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools==75.8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anais-lunarnav"
+version = "0.1.0"
+description = "Scientific primitives for ANAIS LunarNav"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy==2.0.2",
+    "spiceypy==6.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==8.3.5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
