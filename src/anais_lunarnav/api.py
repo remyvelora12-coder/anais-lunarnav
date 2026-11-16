@@ -135,3 +135,6 @@ def analyze_instant(request: InstantRequest):
 def analyze_compare_instant(request: CompareRequest):
     """Compare two sites at one epoch, not an observation window."""
     return _execute({"alpha": request.site_alpha, "bravo": request.site_bravo}, request.observation_utc)
+
+# Additional mission-analysis routes share this backend's scientific engine.
+from . import timeline_api  # noqa: E402,F401
