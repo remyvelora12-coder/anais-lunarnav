@@ -1,0 +1,27 @@
+name: LunarNav Frontend CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dashboard-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install pinned frontend dependencies
+        working-directory: frontend
+        run: npm install --no-audit --no-fund
+      - name: Typecheck and build production bundle
+        working-directory: frontend
+        run: npm run build
+      - name: Upload built dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: lunarnav-dashboard-build
+          path: frontend/dist
+          if-no-files-found: error
