@@ -1,0 +1,45 @@
+name: LunarNav SPICE Kernel Coverage CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-kernel-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned Python dependencies
+        run: python -m pip install -e '.[api,test]'
+      - name: Acquire JPL NAIF reference kernels
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/lunarnav-kernels
+          curl --fail --location --retry 3 --silent --show-error \
+            https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls \
+            --output /tmp/lunarnav-kernels/naif0012.tls
+          curl --fail --location --retry 3 --silent --show-error \
+            https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp \
+            --output /tmp/lunarnav-kernels/de440s.bsp
+          curl --fail --location --retry 3 --silent --show-error \
+            https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc \
+            --output /tmp/lunarnav-kernels/pck00011.tpc
+          test "$(stat -c %s /tmp/lunarnav-kernels/de440s.bsp)" -gt 10000000
+          sha256sum /tmp/lunarnav-kernels/*
+      - name: Execute real SPICE coverage checks through scientific API
+        env:
+          LUNARNAV_KERNEL_PATHS: /tmp/lunarnav-kernels/naif0012.tls:/tmp/lunarnav-kernels/de440s.bsp:/tmp/lunarnav-kernels/pck00011.tpc
+        run: python scripts/verify_kernel_coverage.py
+      - name: Upload evidence regardless of result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lunarnav-021-real-spice-coverage
+          path: evidence/scientific/kernel-coverage-2026-11-14_15.json
+          if-no-files-found: warn
